@@ -65,6 +65,14 @@ end
 
 RegisterServerEvent('esx_holdup:toofar')
 AddEventHandler('esx_holdup:toofar', function(robb)
+	TriggerEvent('esx:getPlayers', function(xPlayers)
+		rob = false
+		for k, v in pairs(xPlayers) do
+			if v.job.name == 'cop' then
+				TriggerClientEvent('esx:showNotification', k, '~r~ Braquage annulé à: ~g~' .. stores[robb].nameofstore)
+			end
+		end
+	end)
 	if(robbers[source])then
 		TriggerClientEvent('esx_holdup:toofarlocal', source)
 		robbers[source] = nil
@@ -92,41 +100,47 @@ AddEventHandler('esx_holdup:rob', function(robb)
 			end
 		end)
 						
-		if(cops > 1)then
-				TriggerEvent('esx:getPlayers', function(xPlayers)
-						for k, v in pairs(xPlayers) do
-							if v.job.name == 'cop' then
-								TriggerClientEvent('esx:showNotification', k, '~r~ Braquage en cours à: ~g~' .. store.nameofstore)
-							end
-						end
-					end)
-				TriggerClientEvent('esx:showNotification', source, 'Vous avez commencé à braquer ' .. store.nameofstore .. ', ne vous éloignez pas!')
-				TriggerClientEvent('esx:showNotification', source, 'L\'alarme à été déclenché ')
-				TriggerClientEvent('esx:showNotification', source, 'Tenez la position pendant 2min et l\'argent est à vous! ')
-				TriggerClientEvent('esx_holdup:currentlyrobbing', source, robb)
-				stores[robb].lastrobbed = os.time()
-				robbers[source] = robb
-				local savedSource = source
-				SetTimeout(120000, function()
-					if(robbers[savedSource])then
-						TriggerClientEvent('esx_holdup:robberycomplete', savedSource, job)
-						TriggerEvent('esx:getPlayerFromId', source, function(xPlayer) 
-							if(xPlayer)then 
-							xPlayer:addAccountMoney('black_money', store.reward)
-							TriggerClientEvent('esx:showNotification', source, '~r~ Braquage terminé.~s~ ~h~ Fuie!')
-							TriggerEvent('esx:getPlayers', function(xPlayers)
-								for k, v in pairs(xPlayers) do
-									if v.job.name == 'cop' then
-										TriggerClientEvent('esx:showNotification', k, '~r~ Braquage terminé à: ~g~' .. store.nameofstore)
-									end
+		if rob == false then			
+			if(cops > 0)then
+				rob = true
+					TriggerEvent('esx:getPlayers', function(xPlayers)
+							for k, v in pairs(xPlayers) do
+								if v.job.name == 'cop' then
+									TriggerClientEvent('esx:showNotification', k, '~r~ Braquage en cours à: ~g~' .. store.nameofstore)
 								end
-							end)
-						end
-					end)
-				end
-			end)
+							end
+						end)
+					TriggerClientEvent('esx:showNotification', source, 'Vous avez commencé à braquer ' .. store.nameofstore .. ', ne vous éloignez pas!')
+					TriggerClientEvent('esx:showNotification', source, 'L\'alarme à été déclenché ')
+					TriggerClientEvent('esx:showNotification', source, 'Tenez la position pendant 5min et l\'argent est à vous! ')
+					TriggerClientEvent('esx_holdup:currentlyrobbing', source, robb)
+					stores[robb].lastrobbed = os.time()
+					robbers[source] = robb
+					local savedSource = source
+					SetTimeout(300000, function()
+						if(robbers[savedSource])then
+							rob = false
+							TriggerClientEvent('esx_holdup:robberycomplete', savedSource, job)
+							TriggerEvent('esx:getPlayerFromId', source, function(xPlayer) 
+								if(xPlayer)then 
+								xPlayer:addAccountMoney('black_money', store.reward)
+								TriggerClientEvent('esx:showNotification', source, '~r~ Braquage terminé.~s~ ~h~ Fuie!')
+								TriggerEvent('esx:getPlayers', function(xPlayers)
+									for k, v in pairs(xPlayers) do
+										if v.job.name == 'cop' then
+											TriggerClientEvent('esx:showNotification', k, '~r~ Braquage terminé à: ~g~' .. store.nameofstore)
+										end
+									end
+								end)
+							end
+						end)
+					end
+				end)
+			else
+				TriggerClientEvent('esx:showNotification', source, 'Il faut minimum ~g~1 policier~s~ connecté pour braquer.')
+			end
 		else
-			TriggerClientEvent('esx:showNotification', source, 'Il faut minimum 1 policier connecté pour braquer.')
-		end				
+			TriggerClientEvent('esx:showNotification', source, '~r~Un braquage est déjà en cours.')				
+		end
 	end
 end)
