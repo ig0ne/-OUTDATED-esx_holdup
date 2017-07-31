@@ -90,6 +90,20 @@ AddEventHandler('esx_holdup:currentlyrobbing', function(robb)
 	secondsRemaining = 120
 end)
 
+RegisterNetEvent('esx_holdup:killblip')
+AddEventHandler('esx_holdup:killblip', function()
+    RemoveBlip(blipRobbery)
+end)
+
+RegisterNetEvent('esx_holdup:setblip')
+AddEventHandler('esx_holdup:setblip', function(position)
+    blipRobbery = AddBlipForCoord(position.x, position.y, position.z)
+    SetBlipSprite(blipRobbery , 161)
+    SetBlipScale(blipRobbery , 2.0)
+    SetBlipColour(blipRobbery, 3)
+    PulseBlip(blipRobbery)
+end)
+
 RegisterNetEvent('esx_holdup:toofarlocal')
 AddEventHandler('esx_holdup:toofarlocal', function(robb)
 	holdingup = false
