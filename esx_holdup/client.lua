@@ -9,6 +9,7 @@
 local holdingup = false
 local store = ""
 local secondsRemaining = 0
+local blipRobbery = nil
 
 function DisplayHelpText(str)
 	SetTextComponentFormat("STRING")
