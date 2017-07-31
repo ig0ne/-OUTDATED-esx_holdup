@@ -1,62 +1,55 @@
---<-.(`-')               _                         <-. (`-')_  (`-')  _                          (`-')              _           (`-') (`-')  _ _(`-')    (`-')  _      (`-')
--- __( OO)      .->     (_)        .->                \( OO) ) ( OO).-/    <-.          .->   <-.(OO )     <-.     (_)         _(OO ) ( OO).-/( (OO ).-> ( OO).-/     _(OO )
---'-'---.\  ,--.'  ,-.  ,-(`-') ,---(`-')  .----.  ,--./ ,--/ (,------. (`-')-----.(`-')----. ,------,) (`-')-----.,-(`-'),--.(_/,-.\(,------. \    .'_ (,------.,--.(_/,-.\
---| .-. (/ (`-')'.'  /  | ( OO)'  .-(OO ) /  ..  \ |   \ |  |  |  .---' (OO|(_\---'( OO).-.  '|   /`. ' (OO|(_\---'| ( OO)\   \ / (_/ |  .---' '`'-..__) |  .---'\   \ / (_/
---| '-' `.)(OO \    /   |  |  )|  | .-, \|  /  \  .|  . '|  |)(|  '--.   / |  '--. ( _) | |  ||  |_.' |  / |  '--. |  |  ) \   /   / (|  '--.  |  |  ' |(|  '--.  \   /   / 
---| /`'.  | |  /   /)  (|  |_/ |  | '.(_/'  \  /  '|  |\    |  |  .--'   \_)  .--'  \|  |)|  ||  .   .'  \_)  .--'(|  |_/ _ \     /_) |  .--'  |  |  / : |  .--' _ \     /_)
---| '--'  / `-/   /`    |  |'->|  '-'  |  \  `'  / |  | \   |  |  `---.   `|  |_)    '  '-'  '|  |\  \    `|  |_)  |  |'->\-'\   /    |  `---. |  '-'  / |  `---.\-'\   /   
---`------'    `--'      `--'    `-----'    `---''  `--'  `--'  `------'    `--'       `-----' `--' '--'    `--'    `--'       `-'     `------' `------'  `------'    `-'    
 local stores = {
-	["paleto_twentyfourseven"] = {
+	--[["paleto_twentyfourseven"] = {
 		position = { ['x'] = 1736.32092285156, ['y'] = 6419.4970703125, ['z'] = 35.037223815918 },
-		reward = math.random(1000,20000),
+		reward = math.random(100,1000),
 		nameofstore = "Twenty Four Seven. (Paleto Bay)",
 		lastrobbed = 0
-	},
+	},]]
 	["sandyshores_twentyfoursever"] = {
 		position = { ['x'] = 1961.24682617188, ['y'] = 3749.46069335938, ['z'] = 32.3437461853027 },
-		reward = math.random(1000,20000),
+		reward = math.random(500,5000),
 		nameofstore = "Twenty Four Seven. (Sandy Shores)",
 		lastrobbed = 0
 	},
 	["bar_one"] = {
 		position = { ['x'] = 1986.1240234375, ['y'] = 3053.8747558594, ['z'] = 47.215171813965 },
-		reward = math.random(1000,20000),
+		reward = math.random(500,5000),
 		nameofstore = "Yellow Jack. (Sandy Shores)",
 		lastrobbed = 0
 	},
 	["ocean_liquor"] = {
 		position = { ['x'] = -2959.33715820313, ['y'] = 388.214172363281, ['z'] = 14.0432071685791 },
-		reward = math.random(1000,20000),
+		reward = math.random(1000,10000),
 		nameofstore = "Robs Liquor. (Great Ocean Higway)",
 		lastrobbed = 0
 	},
 	["sanandreas_liquor"] = {
 		position = { ['x'] = -1219.85607910156, ['y'] = -916.276550292969, ['z'] = 11.3262157440186 },
-		reward = math.random(1000,20000),
+		reward = math.random(1000,10000),
 		nameofstore = "Robs Liquor. (San andreas Avenue)",
 		lastrobbed = 0
 	},
 	["grove_ltd"] = {
 		position = { ['x'] = -43.4035377502441, ['y'] = -1749.20922851563, ['z'] = 29.421012878418 },
-		reward = math.random(1000,20000),
+		reward = math.random(1000,10000),
 		nameofstore = "LTD Gasoline. (Grove Street)",
 		lastrobbed = 0
 	},
 	["mirror_ltd"] = {
 		position = { ['x'] = 1160.67578125, ['y'] = -314.400451660156, ['z'] = 69.2050552368164 },
-		reward = math.random(1000,20000),
+		reward = math.random(1000,10000),
 		nameofstore = "LTD Gasoline. (Mirror Park Boulevard)",
 		lastrobbed = 0
 	},
 	["littleseoul_twentyfourseven"] = {
 		position = { ['x'] = -709.17022705078, ['y'] = -904.21722412109, ['z'] = 19.215591430664 },
-		reward = math.random(1000,20000),
+		reward = math.random(1000,10000),
 		nameofstore = "Twenty Four Seven. (Little Seoul)",
 		lastrobbed = 0
 	}
 }
 
+local rob = false
 local robbers = {}
 
 function get3DDistance(x1, y1, z1, x2, y2, z2)
@@ -69,14 +62,15 @@ AddEventHandler('esx_holdup:toofar', function(robb)
 		rob = false
 		for k, v in pairs(xPlayers) do
 			if v.job.name == 'cop' then
-				TriggerClientEvent('esx:showNotification', k, '~r~ Braquage annulé à: ~g~' .. stores[robb].nameofstore)
+				TriggerClientEvent('esx:showNotification', k, '~r~ Braquage annulé à: ~b~' .. stores[robb].nameofstore)
+				TriggerClientEvent('esx_holdup:killblip', k)
 			end
 		end
 	end)
 	if(robbers[source])then
 		TriggerClientEvent('esx_holdup:toofarlocal', source)
 		robbers[source] = nil
-		TriggerClientEvent('esx:showNotification', source, '~r~ Le braquage à été annulé: ~g~' .. stores[robb].nameofstore)
+		TriggerClientEvent('esx:showNotification', source, '~r~ Le braquage à été annulé: ~b~' .. stores[robb].nameofstore)
 	end
 end)
 
@@ -99,14 +93,15 @@ AddEventHandler('esx_holdup:rob', function(robb)
 				end
 			end
 		end)
-						
+
 		if rob == false then			
-			if(cops > 0)then
+			if(cops > 1)then
 				rob = true
 					TriggerEvent('esx:getPlayers', function(xPlayers)
 							for k, v in pairs(xPlayers) do
 								if v.job.name == 'cop' then
-									TriggerClientEvent('esx:showNotification', k, '~r~ Braquage en cours à: ~g~' .. store.nameofstore)
+									TriggerClientEvent('esx:showNotification', k, '~r~ Braquage en cours à: ~b~' .. store.nameofstore)
+									TriggerClientEvent('esx_holdup:setblip', k, stores[robb].position)
 								end
 							end
 						end)
@@ -128,7 +123,8 @@ AddEventHandler('esx_holdup:rob', function(robb)
 								TriggerEvent('esx:getPlayers', function(xPlayers)
 									for k, v in pairs(xPlayers) do
 										if v.job.name == 'cop' then
-											TriggerClientEvent('esx:showNotification', k, '~r~ Braquage terminé à: ~g~' .. store.nameofstore)
+											TriggerClientEvent('esx:showNotification', k, '~r~ Braquage terminé à: ~b~' .. store.nameofstore)
+											TriggerClientEvent('esx_holdup:killblip', k)
 										end
 									end
 								end)
@@ -137,7 +133,7 @@ AddEventHandler('esx_holdup:rob', function(robb)
 					end
 				end)
 			else
-				TriggerClientEvent('esx:showNotification', source, 'Il faut minimum ~g~1 policier~s~ connecté pour braquer.')
+				TriggerClientEvent('esx:showNotification', source, 'Il faut minimum ~b~2 policier~s~ connecté pour braquer.')
 			end
 		else
 			TriggerClientEvent('esx:showNotification', source, '~r~Un braquage est déjà en cours.')				
