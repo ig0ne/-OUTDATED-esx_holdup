@@ -1,3 +1,4 @@
+# [OUTDATED] No more suport
 # esx_holdup
 Braquage/Holdup, 
 
